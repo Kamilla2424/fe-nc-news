@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useOptimistic } from "react"
 import { useParams } from "react-router-dom"
-import { fetchArticleById, fetchCommentsById } from "../../utils"
+import { fetchArticleById, fetchCommentsById, updateVotesById } from "../../utils"
 
 const Article = () => {
     const {article_id} = useParams()
@@ -14,8 +14,24 @@ const Article = () => {
         fetchCommentsById(article_id).then(({comments}) => {
             setComments(comments)
         })
-    }, [])
+    }, [article_id])
 
+    const handleVote = (article_id, isLike) => {
+        let updatedVotes = article.votes
+
+        if(isLike){
+            updatedVotes =  article.votes + 1
+        }else{
+            updatedVotes = article.votes - 1
+        }
+        setArticle(article => ({...article, votes: updatedVotes}))
+
+        updateVotesById(article_id, updatedVotes).catch((err) => {
+            console.log(err)
+            setArticle(article => ({...article, votes: article.votes}));
+        })
+    }
+    
     return (
         <>
         <h2>{article.title}</h2>
@@ -23,19 +39,21 @@ const Article = () => {
         <img src={article.article_img_url} width={500}/>
         <p>{article.body}</p>
         <p>Votes: {article.votes}</p>
+        <button key="like" onClick={() => handleVote(article_id, true)}>Like</button>
+        <button key="dislike" onClick={() => handleVote(article_id, false)}>Dislike</button>
         <h3 className="comment-header">Comments:</h3>
         <div className="comment-section">
+        <ul className="comment-list">
         {comments.map((comment) => {
             return (
-            <ul className="comment-list">
             <li className="comment" key={comment.comment_id}>
                 <p className="comment-author">@{comment.author}</p>
                 <p className="comment-body">{comment.body}</p>
                 <p className="comment-date">{comment.created_at}</p>
             </li>
-            </ul>
             )
         })}
+        </ul>
         </div>
         </>
     )

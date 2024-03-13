@@ -24,3 +24,10 @@ export const fetchCommentsById = (article_id) => {
         return response.data
     })
 }
+
+export const updateVotesById = (article_id, inc_votes) => {
+    return newsApi.patch(`api/articles/${article_id}`, {inc_votes: inc_votes})
+    .then((response) => {
+        return response.data
+    })
+}
