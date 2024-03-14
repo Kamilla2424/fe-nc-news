@@ -24,3 +24,17 @@ export const fetchCommentsById = (article_id) => {
         return response.data
     })
 }
+
+export const fetchUsers = () => {
+    return newsApi.get('api/users')
+    .then((response) => {
+        return response.data
+    })
+}
+
+export const postNewComment = (article_id, newComment) => {
+    return newsApi.post(`api/articles/${article_id}/comments`, newComment)
+    .then((response) => {
+        return response.data
+    })
+}
