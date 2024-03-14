@@ -12,17 +12,7 @@ const Article = ({username}) => {
     const [showCommentBox, setShowCommentBox] = useState(false)
     const [newComment, setNewComment] = useState({})
     const navigate = useNavigate()
-
-    useEffect(() => {
-        console.log
-        fetchArticleById(article_id).then(({article}) => {
-            setArticle(article)
-        })
-        fetchCommentsById(article_id).then(({comments}) => {
-            setComments(comments)
-        })
-    }, [article_id])
-
+    
     const handleAddComment = () => {
         setShowCommentBox(!showCommentBox)
     }
@@ -33,18 +23,29 @@ const Article = ({username}) => {
         return newComment
     }
     
+    
+    const fetchAllComments = () => {
+        fetchCommentsById(article_id).then(({comments}) => {
+            comments.sort((a,b) => {return new Date(b.created_at) - new Date(a.created_at)})
+            setComments(comments)
+        })
+    }
     const handleSubmit = (event) => {
         event.preventDefault
-        if(username.length === 0){
-            navigate('/login')
-        }else{
             postNewComment(article_id, newComment).then((response) => {
                 const commentsArr = [...comments, response]
                 setComments(commentsArr)
-
+                fetchAllComments()
             })
-        }
     }
+
+    useEffect(() => {
+        fetchArticleById(article_id).then(({article}) => {
+            setArticle(article)
+        })
+        fetchAllComments()
+    }, [article_id])
+
 
     return (
         <>

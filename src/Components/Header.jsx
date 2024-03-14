@@ -6,7 +6,7 @@ const Header = ({username}) => {
         <h1>NC-NEWS</h1>
         <Link to='/'>Home</Link>
         <Link to='/articles'>Articles</Link>
-        {username.length === 0 ?<Link to='/login'>Login</Link>:<Link to='/profile'>{username}</Link>}
+        <Link to='/profile'>{username}</Link>
         </>
     )
 }
