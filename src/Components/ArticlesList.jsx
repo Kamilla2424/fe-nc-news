@@ -15,7 +15,9 @@ const ArticlesList = () => {
         <div>
         {allArticles.map((article) => {
             return (
+            <div key={article.article_id}>
                 <ArticleCard article={article}/>
+            </div> 
             )
         })}
         </div>

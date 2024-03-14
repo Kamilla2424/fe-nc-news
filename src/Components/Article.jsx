@@ -1,6 +1,6 @@
 import { useEffect, useState, useOptimistic } from "react"
 import { useParams } from "react-router-dom"
-import { fetchArticleById, fetchCommentsById, postNewComment} from "../../utils"
+import { fetchArticleById, fetchCommentsById, postNewComment, deleteComment } from "../../utils"
 import Comments from "./Comments"
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
@@ -33,10 +33,19 @@ const Article = ({username}) => {
     const handleSubmit = (event) => {
         event.preventDefault
             postNewComment(article_id, newComment).then((response) => {
+                console.log(response)
                 const commentsArr = [...comments, response]
                 setComments(commentsArr)
                 fetchAllComments()
+        })
+    }
+    const handleDeleteComment = (comment_id) => {
+        deleteComment(comment_id).then(() => {
+            const filteredComments = comments.filter((comment) => {
+                return comment.comment_id !== comment_id
             })
+            setComments(filteredComments)
+        })
     }
 
     useEffect(() => {
@@ -67,7 +76,9 @@ const Article = ({username}) => {
         <div className="comment-section">
         {comments.map((comment) => {
             return (
-            <Comments comment={comment}/>
+            <div key={comment.comment_id}>
+                <Comments comment={comment} username={username} onDelete={handleDeleteComment}/>
+            </div>
             )
         })}
         </div>
