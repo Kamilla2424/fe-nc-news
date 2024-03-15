@@ -67,9 +67,11 @@ const Article = ({username}) => {
             setArticle(article)
             setVotes(article.votes)
         })
-        fetchAllComments()
+        fetchCommentsById(article_id).then(({comments}) => {
+            setComments(comments)
+        })
     }, [article_id])
-
+    
     return (
         <>
         <h2>{article.title}</h2>
@@ -91,13 +93,16 @@ const Article = ({username}) => {
             )}
         </div>
         <div className="comment-section">
+        <ul className="comment-list">
         {comments.map((comment) => {
             return (
+
             <div key={comment.comment_id}>
                 <Comments comment={comment} username={username} onDelete={handleDeleteComment} error={error}/>
             </div>
             )
         })}
+        </ul>
         </div>
         </>
     )
