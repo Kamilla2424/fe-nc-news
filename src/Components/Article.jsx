@@ -70,6 +70,7 @@ const Article = ({username}) => {
         fetchCommentsById(article_id).then(({comments}) => {
             setComments(comments)
         })
+        fetchAllComments()
     }, [article_id])
     
     return (
