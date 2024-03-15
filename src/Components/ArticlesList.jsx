@@ -1,15 +1,16 @@
-import { fetchArticles } from "../../utils"
+import { fetchArticles, fetchTopics } from "../../utils"
 import { useEffect, useState } from "react"
 import ArticleCard from "./ArticleCard"
 
-const ArticlesList = () => {
+const ArticlesList = ({topic}) => {
     const [allArticles, setAllArticles] = useState([])
 
     useEffect(() => {
-        fetchArticles().then(({articles}) => {
+        fetchArticles(topic).then(({articles}) => {
             setAllArticles(articles)
         })
-    }, [])
+    }, [topic])
+
     return (
         <>
         <div>
