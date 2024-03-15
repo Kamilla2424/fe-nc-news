@@ -56,3 +56,10 @@ export const fetchTopics = () => {
         return response.data
     })
 }
+
+export const updateVotesById = (article_id, num) => {
+    return newsApi.patch(`api/articles/${article_id}`, {inc_votes: num})
+    .then((response) => {
+        return response.data
+    })
+}

@@ -1,6 +1,6 @@
 import { useEffect, useState, useOptimistic } from "react"
 import { useParams } from "react-router-dom"
-import { fetchArticleById, fetchCommentsById, postNewComment, deleteComment } from "../../utils"
+import { fetchArticleById, fetchCommentsById, postNewComment, deleteComment, updateVotesById } from "../../utils"
 import Comments from "./Comments"
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
@@ -13,6 +13,8 @@ const Article = ({username}) => {
     const [newComment, setNewComment] = useState({})
     const navigate = useNavigate()
     const [error, setError] = useState({})
+    const [votes, setVotes] = useState(0)
+    const [voteErr, setVoteErr] = useState('')
     
     const handleAddComment = () => {
         setShowCommentBox(!showCommentBox)
@@ -51,13 +53,22 @@ const Article = ({username}) => {
         })
     }
 
+    const handleVote = (num) => {
+        const newVote = votes + num
+        setVotes(newVote)
+        updateVotesById(article_id, num).catch((err) => {
+            setVotes(votes)
+            setVoteErr("Failed to update vote. Please try again :)")
+        })
+    }
+
     useEffect(() => {
         fetchArticleById(article_id).then(({article}) => {
             setArticle(article)
+            setVotes(article.votes)
         })
         fetchAllComments()
     }, [article_id])
-
 
     return (
         <>
@@ -65,7 +76,10 @@ const Article = ({username}) => {
         <h3>{article.author}</h3>
         <img src={article.article_img_url} width={460}/>
         <p>{article.body}</p>
-        <p>Votes: {article.votes}</p>
+        <p>Votes: {votes}</p>
+        <button onClick={() => handleVote(1)}>👍</button>
+        <button onClick={() => handleVote(-1)}>👎</button>
+        {voteErr ? <p>{voteErr}</p> : ''}
         <h3 className="comment-header">Comments:</h3>
         <div onSubmit={handleNewComment}>
             <button onClick={handleAddComment}>Add a Comment</button>
