@@ -12,6 +12,7 @@ const Article = ({username}) => {
     const [showCommentBox, setShowCommentBox] = useState(false)
     const [newComment, setNewComment] = useState({})
     const navigate = useNavigate()
+    const [error, setError] = useState({})
     
     const handleAddComment = () => {
         setShowCommentBox(!showCommentBox)
@@ -33,7 +34,6 @@ const Article = ({username}) => {
     const handleSubmit = (event) => {
         event.preventDefault
             postNewComment(article_id, newComment).then((response) => {
-                console.log(response)
                 const commentsArr = [...comments, response]
                 setComments(commentsArr)
                 fetchAllComments()
@@ -45,6 +45,9 @@ const Article = ({username}) => {
                 return comment.comment_id !== comment_id
             })
             setComments(filteredComments)
+        })
+        .catch((err) => {
+            setError({comment_id: comment_id ,err: err})
         })
     }
 
@@ -60,7 +63,7 @@ const Article = ({username}) => {
         <>
         <h2>{article.title}</h2>
         <h3>{article.author}</h3>
-        <img src={article.article_img_url} width={500}/>
+        <img src={article.article_img_url} width={460}/>
         <p>{article.body}</p>
         <p>Votes: {article.votes}</p>
         <h3 className="comment-header">Comments:</h3>
@@ -77,7 +80,7 @@ const Article = ({username}) => {
         {comments.map((comment) => {
             return (
             <div key={comment.comment_id}>
-                <Comments comment={comment} username={username} onDelete={handleDeleteComment}/>
+                <Comments comment={comment} username={username} onDelete={handleDeleteComment} error={error}/>
             </div>
             )
         })}
