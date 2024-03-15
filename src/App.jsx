@@ -5,6 +5,7 @@ import Header from './Components/Header'
 import ArticlesList from './Components/ArticlesList'
 import Article from './Components/Article'
 import Profile from './Components/Profile'
+import NoMatch from './Components/NoMatch'
 
 function App() {
   const [topic, setTopic] = useState('')
@@ -17,6 +18,7 @@ function App() {
       <Route path='/articles' element={<ArticlesList topic={topic}/>}/>
       <Route path='/articles/:article_id' element={<Article username={username}/>}/>
       <Route path='/profile' element={<Profile username={username}/>}/>
+      <Route path="*" element={<NoMatch/>}/>
     </Routes>
     </>
   )

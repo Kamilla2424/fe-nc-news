@@ -14,6 +14,7 @@ const ArticlesList = ({topic}) => {
     return (
         <>
         <div>
+        {!topic ? <h3>that category doesn't exist</h3> : ''}
         {allArticles.map((article) => {
             return (
             <div key={article.article_id}>
