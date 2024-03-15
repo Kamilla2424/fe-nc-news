@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { fetchTopics } from '../../utils'
 
 const Header = ({username, setTopic}) => {
+    const [error, setError] = useState(false)
     const [allTopcis, setAllTopics] = useState([])
     const navigate = useNavigate()
 

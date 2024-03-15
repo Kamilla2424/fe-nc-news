@@ -15,7 +15,9 @@ const Article = ({username}) => {
     const [error, setError] = useState({})
     const [votes, setVotes] = useState(0)
     const [voteErr, setVoteErr] = useState('')
-    
+    const [articleErr, setArticleErr] = useState('')
+    const [commentErr, setCommentErr] = useState('')
+
     const handleAddComment = () => {
         setShowCommentBox(!showCommentBox)
     }
@@ -39,6 +41,8 @@ const Article = ({username}) => {
                 const commentsArr = [...comments, response]
                 setComments(commentsArr)
                 fetchAllComments()
+        }).catch((err) => {
+            setCommentErr('Needs more characters!')
         })
     }
     const handleDeleteComment = (comment_id) => {
@@ -66,6 +70,8 @@ const Article = ({username}) => {
         fetchArticleById(article_id).then(({article}) => {
             setArticle(article)
             setVotes(article.votes)
+        }).catch((err) => {
+            setArticleErr(err.message)
         })
         fetchCommentsById(article_id).then(({comments}) => {
             setComments(comments)
@@ -73,6 +79,10 @@ const Article = ({username}) => {
         fetchAllComments()
     }, [article_id])
     
+    if(articleErr){
+        navigate('*')
+    }
+
     return (
         <>
         <h2>{article.title}</h2>
@@ -88,7 +98,8 @@ const Article = ({username}) => {
             <button onClick={handleAddComment}>Add a Comment</button>
             {showCommentBox && (
             <div onChange={handleNewComment}>
-                <input type="text" ></input>
+                <input type="text" minLength={1}
+                placeholder={commentErr}></input>
                 <button onClick={handleSubmit}>Submit</button>
             </div>
             )}
